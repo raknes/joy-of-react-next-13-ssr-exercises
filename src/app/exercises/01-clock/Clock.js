@@ -1,9 +1,10 @@
 'use client';
-import React from 'react';
 import format from 'date-fns/format';
+import React from 'react';
+import Spinner from '../../../components/Spinner';
 
 function Clock() {
-  const [time, setTime] = React.useState(new Date());
+  const [time, setTime] = React.useState(null);
 
   React.useEffect(() => {
     const intervalId = window.setInterval(() => {
@@ -15,8 +16,12 @@ function Clock() {
     };
   }, []);
 
+  if (!time) {
+    return <Spinner />;
+  }
+
   return (
-    <p className="clock">{format(time, 'hh:mm:ss.S a')}</p>
+    <p className="clock">{format(time, 'HH:mm:ss.S')}</p>
   );
 }
 
