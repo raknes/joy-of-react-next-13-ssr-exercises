@@ -1,14 +1,20 @@
 'use client';
 import React from 'react';
 
+import Spinner from '../../../components/Spinner';
 import CartTable from './CartTable';
 
 function CheckoutFlow({
-  items,
+  cart,
   taxRate,
   handleDeleteItem,
 }) {
-  if (items.length === 0) {
+  if (!cart.isLoaded) {
+    return (
+      <Spinner />
+    );
+  }
+  if (!cart.items || cart.items.length === 0) {
     return (
       <div className="checkout-flow empty">
         <p>Your Cart is Empty</p>
@@ -21,14 +27,14 @@ function CheckoutFlow({
     currency: 'USD',
   });
 
-  const subtotal = calculateSubtotal(items);
+  const subtotal = calculateSubtotal(cart.items);
   const taxes = subtotal * taxRate;
   const total = subtotal + taxes;
 
   return (
     <div className="checkout-flow">
       <CartTable
-        items={items}
+        items={cart.items}
         handleDeleteItem={handleDeleteItem}
       />
 

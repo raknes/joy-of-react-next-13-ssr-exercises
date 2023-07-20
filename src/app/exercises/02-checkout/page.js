@@ -1,34 +1,34 @@
 'use client';
 import React from 'react';
 
+import CheckoutFlow from './CheckoutFlow';
+import StoreItem from './StoreItem';
 import DATA from './data';
 import reducer from './reducer';
-import StoreItem from './StoreItem';
-import CheckoutFlow from './CheckoutFlow';
 import './styles.css';
 
 function CheckoutExercise() {
-  const [items, dispatch] = React.useReducer(
+  const [cart, dispatch] = React.useReducer(
     reducer,
     null,
     () => {
-      const savedItems =
-        window.localStorage.getItem('cart-items');
-
-      if (savedItems === null) {
-        return [];
-      }
-
-      return JSON.parse(savedItems);
+      return {
+        isLoaded: false,
+        items: []
+      };
     }
   );
 
   React.useEffect(() => {
-    window.localStorage.setItem(
-      'cart-items',
-      JSON.stringify(items)
-    );
-  }, [items]);
+    console.log('load-items');
+    dispatch({
+      type: 'load-items',
+    });
+  }, []);
+
+  React.useEffect(() => {
+    dispatch({ type: 'save-items' });
+  }, [cart]);
 
   return (
     <>
@@ -51,7 +51,7 @@ function CheckoutExercise() {
         </div>
 
         <CheckoutFlow
-          items={items}
+          cart={cart}
           taxRate={0.15}
           handleDeleteItem={(item) =>
             dispatch({
